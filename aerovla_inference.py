@@ -182,7 +182,8 @@ class AeroVLAInference:
             )
         finally:
             # 恢复原始方法
-            nn.Module.requires_grad_ = _orig_requires_grad_
+            if self.load_in_4bit:
+                nn.Module.requires_grad_ = _orig_requires_grad_
 
         # 4-bit 量化后 rotary_emb 的 inv_freq buffer 可能留在 CPU，导致推理报错
         # 将所有非量化 buffer 移到 GPU
